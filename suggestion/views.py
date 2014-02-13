@@ -4,6 +4,8 @@ from models import *
 # Create your views here.
 
 def index(request):
+    Suggestion.set_savings_all() # recalculate savings
+
     conservatives = Suggestion.objects.filter(certainty__gte = 90)
     moderates = Suggestion.objects.filter(certainty__gte = 60)
     aggressives = Suggestion.objects.all()

@@ -27,6 +27,7 @@ class CosmosDir(models.Model):
     parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
     cold = models.FloatField()
     total = models.FloatField()
+    exclude_from_analysis = models.BooleanField(default=False)
     cold_percent = models.FloatField(blank=True, null=True)
     score_deletion = models.FloatField(blank=True, null=True)
 
@@ -103,4 +104,3 @@ class CosmosDir(models.Model):
             return dirs[0]
         else:
             return False
-        

@@ -45,6 +45,14 @@ class Suggestion(TimeStampedModel):
 
     savings = models.FloatField(default=0)
 
+    def __unicode__(self):
+        return '%s suggestion to save %s TiBs: %s' % (self.certainty, self.savings, self.cosmosdir.path)
+
+    @classmethod
+    def set_savings_all(cls):
+        for s in cls.objects.all():
+            s.set_savings()
+
     def set_savings(self):
         if self.ignore:
             self.savings = 0
@@ -52,11 +60,11 @@ class Suggestion(TimeStampedModel):
             self.savings = self.cosmosdir.total
         else:
             if self.retention_percent and self.replication == 3:
-                self.savings = self.total * (1 - self.retention_percent)
+                self.savings = self.cosmosdir.total * (1 - self.retention_percent)
             if self.retention_percent and self.replication != 3:
-                self.savings = self.total * (1 - self.retention_percent) + (self.total * self.retention_percent * self.replication / 3)
+                self.savings = self.cosmosdir.total * (1 - self.retention_percent) + (self.cosmosdir.total * self.retention_percent * self.replication / 3.0)
             if not self.retention_percent and self.replication != 3:
-                self.savings = self.total * self.replication / 3
+                self.savings = self.cosmosdir.total * (3 - self.replication) / 3.0
         
         self.save()
 
@@ -100,6 +108,7 @@ class Suggestion(TimeStampedModel):
 class SuggestionForm(ModelForm):
     class Meta:
         model = Suggestion
+        exclude = ('savings',)
 
     def __init__(self, *args, **kwargs):
         super(SuggestionForm, self).__init__(*args, **kwargs)

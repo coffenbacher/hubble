@@ -11,7 +11,7 @@ def index(request):
         pks.extend(r.cosmosdir.all_children_pks())
 
     print pks
-    dirs = CosmosDir.objects.exclude(pk__in=pks).order_by('-score_deletion')[:100]
+    dirs = CosmosDir.objects.exclude(pk__in=pks).exclude(exclude_from_analysis=True).order_by('-score_deletion')[:100]
     return render(request, 'index.html', {'dirs': dirs.select_related()})
 
 def suggest(request, cd):

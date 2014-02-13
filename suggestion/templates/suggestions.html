@@ -9,17 +9,17 @@
         <div class="row">
             <div class="col-lg-4">
                 <div class="alert alert-dismissable alert-success">
-                    <strong>Conservative suggestion savings: {{ cc }} TiBs</strong>
+                    <strong>Conservative suggestion savings: <br/> {{ cc|floatformat:0 }} TiBs</strong>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="alert alert-dismissable alert-info">
-                    <strong>Moderate suggestion savings: {{ mc }} TiBs</strong>
+                    <strong>Moderate suggestion savings: <br/> {{ mc|floatformat:0 }} TiBs</strong>
                 </div>
             </div>
             <div class="col-lg-4">
                 <div class="alert alert-dismissable alert-warning">
-                    <strong>Aggressive suggestion savings: {{ ac }} TiBs</strong>
+                    <strong>Aggressive suggestion savings: <br/> {{ ac|floatformat:0 }} TiBs</strong>
                 </div>
             </div>
         </div>
@@ -27,8 +27,9 @@
     {% for s in ss %}
     <div class="row">
         <div class="col-lg-4">
-            <button type="button" class="btn btn-success">{{ s.savings }} TiBs</button>
-            <button type="button" class="btn btn-info">Edit Suggestion</button>
+            <button type="button" class="btn btn-success">{{ s.savings|floatformat:0 }} TiBs</button>
+            <button type="button" class="btn btn-info" onclick="location.href='/admin/suggestion/suggestion/{{ s.pk }}/'">Edit Suggestion</button>
+            <button type="button" class="btn btn-primary" onclick="location.href='{% url 'snapshot.views.suggest' s.cosmosdir.pk %}'">New</button>
         </div>
         <div class="col-lg-8">
             <a href="{{ s.cosmosdir.path }}">{{ s.cosmosdir.path }}</a>
@@ -37,7 +38,7 @@
                 <span class="label label-danger">aggressive proposal</span>
             {% endif %}
             {% if s.certainty > 55 %}
-                <span class="label label-info">conservative proposal</span>
+                <span class="label label-success">conservative proposal</span>
             {% endif %}
             {% if s.delete_all %}
                 <span class="label label-danger">deletion candidate</span>
