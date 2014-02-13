@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.6/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+import dj_database_url
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -36,6 +37,13 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'snapshot',
+    'django_extensions',
+    'south',
+    'suggestion',
+    'django.contrib.humanize',
+    'crispy_forms',
+    'devserver',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -80,3 +88,15 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.6/howto/static-files/
 
 STATIC_URL = '/static/'
+TEMPLATE_DIRS = (os.path.join(BASE_DIR, 'templates'),)
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+db = {'username': 'postgres',
+      'password': 'beffy44',
+      'name': 'hubble',}
+
+DATABASES['default'] = dj_database_url.config(
+                        default='postgres://%s:%s@localhost:5432/%s' % (
+                                db['username'], 
+                                db['password'], 
+                                db['name']))

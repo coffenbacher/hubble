@@ -6,7 +6,8 @@ admin.autodiscover()
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'hubble.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
+    url(r'^snapshot/', include('snapshot.urls')),
+    url(r'^suggestion/', include('suggestion.urls')),
 
     url(r'^admin/', include(admin.site.urls)),
 )

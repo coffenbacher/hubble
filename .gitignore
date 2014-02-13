@@ -4,3 +4,4 @@
 venv
 *.swp
 *.shell_history
+data
