@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="well">
+        <a href="{{ d.path }}">{{ d.path }}</a>
+        <br />
+        <span class="label label-warning">{{ d.total|floatformat:0 }} TiBs total</span>
+        <span class="label label-info">{{ d.cold|floatformat:0 }} TiBs cold</span>
+        {% if d.other_cluster %}
+            <span class="label label-primary"><a href="{{ d.other_cluster.path }}">Also available on {{ d.other_cluster.dc }}</a></span>
+        {% endif %}
+    </div>
+    <div class="well">
+        <form class="form-horizontal" method="POST">
+            {% csrf_token %}
+            {% crispy form form.helper %}
+        </form>
+    </div>
+{% endblock %}

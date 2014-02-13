@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block content %}
+    <p class="lead">
+        Top 100 suggestions by benefit
+    </p>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="alert alert-dismissable alert-success">
+                    <strong>Conservative suggestion savings: {{ cc }} TiBs</strong>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="alert alert-dismissable alert-info">
+                    <strong>Moderate suggestion savings: {{ mc }} TiBs</strong>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="alert alert-dismissable alert-warning">
+                    <strong>Aggressive suggestion savings: {{ ac }} TiBs</strong>
+                </div>
+            </div>
+        </div>
+    <hr />
+    {% for s in ss %}
+    <div class="row">
+        <div class="col-lg-4">
+            <button type="button" class="btn btn-success">{{ s.savings }} TiBs</button>
+            <button type="button" class="btn btn-info">Edit Suggestion</button>
+        </div>
+        <div class="col-lg-8">
+            <a href="{{ s.cosmosdir.path }}">{{ s.cosmosdir.path }}</a>
+            <br/>
+            {% if s.certainty < 50 %}
+                <span class="label label-danger">aggressive proposal</span>
+            {% endif %}
+            {% if s.certainty > 55 %}
+                <span class="label label-info">conservative proposal</span>
+            {% endif %}
+            {% if s.delete_all %}
+                <span class="label label-danger">deletion candidate</span>
+            {% endif %}
+            {% if s.retention_percent %}
+                <span class="label label-info">retention adjustment candidate</span>
+            {% endif %}
+            {% if s.replication != 3 %}
+                <span class="label label-warning">replication policy adjustment candidate</span>
+            {% endif %}
+            <br />
+            <br />
+            <div class="well">
+                {{ s.notes }}
+            </div>
+        </div>
+    </div>
+    <hr />
+    {% endfor %}
+{% endblock %}

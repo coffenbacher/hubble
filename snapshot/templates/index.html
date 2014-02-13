@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load humanize %}
+
+
+{% block content %}
+    <p class="lead">
+        Top 100 untriaged paths for possible suggestions
+    </p>
+    <p class="well">
+        "Approve" approves the current directory. Subdirectories are still open to suggestions. "Investigate" gives you the opportunity to create a suggestion.
+
+    </p>
+    {% for d in dirs %}
+    <div class="row">
+        <div class="col-lg-3">
+            <button type="button" class="btn btn-success" onclick="location.href='{% url 'snapshot.views.approve' d.pk %}'">Approve</button>
+            <button type="button" class="btn btn-info" onclick="location.href='{% url 'snapshot.views.suggest' d.pk %}'">Investigate</a></button>
+        </div>
+        <div class="col-lg-6">
+            <a href="{{ d.path }}">{{ d.path }}</a><br/>
+            <span class="label label-warning">{{ d.total|floatformat:0 }} TiBs total</span>
+            <span class="label label-info">{% widthratio d.cold d.total 100|floatformat:0 %}% cold</span>
+            {% if d.other_cluster %}
+                <span class="label label-primary"><a href="{{ d.other_cluster.path }}">Also available on {{ d.other_cluster.dc }}</a></span>
+            {% endif %}
+        </div>
+    </div>
+    <hr />
+    {% endfor %}
+{% endblock %}

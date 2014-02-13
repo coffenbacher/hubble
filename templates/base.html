@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>Hubble - deep investigation and issue tracker for Cosmos utilization</title>
+        <link type="text/css" rel="stylesheet" href="http://bootswatch.com/slate/bootstrap.css">
+        <style>
+            body {
+            }
+            
+            h1 {
+                font-size: 4em;
+            }
+
+            #wrapper {
+                margin: auto;
+                width: 1000px;
+            }
+                
+            #content {
+            }
+
+        </style>
+    </head>
+    <body>
+        <div id="wrapper">
+            <div id="content">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <a href="/" style="color: #c8c8c8"><h1>Hubble</h1></a>
+                    </div>
+                </div>
+                {% block content %}
+
+                {% endblock %}
+            </div>
+        </div>
+    </body>
+</html>
+
