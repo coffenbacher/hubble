@@ -1,0 +1,6 @@
+*.pyc
+*.log
+*.sqlite3
+venv
+*.swp
+*.shell_history
