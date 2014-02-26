@@ -3,7 +3,7 @@ from crispy_forms.layout import Submit
 from django.forms import ModelForm
 from django.db import models
 from django_extensions.db.models import TimeStampedModel
-from snapshot.models import CosmosDir
+from snapshot.models import CosmosDirTree
 # Create your models here.
 
 STATUS_CHOICES = (
@@ -26,7 +26,7 @@ class Suggestion(TimeStampedModel):
 
     These are recursively considered to apply to subdirectories. Suggestions on subdirectories will be ignored.
     """
-    cosmosdir = models.ForeignKey(CosmosDir, related_name='suggestions')
+    cosmosdir = models.ForeignKey(CosmosDirTree, related_name='suggestions')
 
     certainty = models.IntegerField(choices=CERTAINTY_CHOICES, default=40)
 

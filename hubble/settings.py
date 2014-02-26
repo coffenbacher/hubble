@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'suggestion',
     'django.contrib.humanize',
     'crispy_forms',
-    'devserver',
+    #'devserver',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -13,18 +13,19 @@ class Snapshot(TimeStampedModel):
             reader = csv.reader(csvfile)
             for row in reader:
                 if row[0] != 'path':
-                    CosmosDir.objects.get_or_create(snapshot = s, path = row[0], cold = row[1], total = row[2])
+                    if float(row[2]) > 0:
+                        CosmosDirTree.objects.get_or_create(snapshot = s, path = row[0], cold = row[1], total = row[2])
 
         print 'Deduping'
-        CosmosDir.dedupe()
+        CosmosDirTree.dedupe()
 
         print 'Creating graph'
-        CosmosDir.create_graph()
+        CosmosDirTree.create_graph()
 
-class CosmosDir(models.Model):
+class CosmosDirTree(models.Model):
     snapshot = models.ForeignKey('Snapshot')
     path = models.CharField(max_length=500)
-    parent = models.ForeignKey('self', related_name='children', null=True, blank=True)
+    parent = models.ForeignKey('self', null=True, blank=True, related_name='children')
     cold = models.FloatField()
     total = models.FloatField()
     exclude_from_analysis = models.BooleanField(default=False)
@@ -47,25 +48,22 @@ class CosmosDir(models.Model):
             o.dedupe()
 
     def all_children(self):
-        # This is a hack to avoid doing something smarter tonight
-        children = CosmosDir.objects.filter(
+        return CosmosDirTree.objects.filter(
                 Q(parent = self) |
-                Q(parent__parent = self) |
-                Q(parent__parent__parent = self) |
-                Q(parent__parent__parent__parent = self)
+                Q(parent__parent = self) | 
+                Q(parent__parent__parent = self) | 
+                Q(parent__parent__parent__parent = self) |
+                Q(parent__parent__parent__parent__parent = self) 
                 )
-        return children
-
     def all_children_pks(self):
-        allcs = self.all_children()
-        return [a.pk for a in allcs]
+        return [a.pk for a in self.all_children()]
 
     def dedupe(self):
-        CosmosDir.objects.filter(path = self.path).exclude(pk = self.pk).delete()
+        CosmosDirTree.objects.filter(path = self.path).exclude(pk = self.pk).delete()
 
     def find_parent(self):
         p = '/'.join(self.path.split('/')[:-2]) + '/'
-        par = CosmosDir.objects.filter(path=p)
+        par = CosmosDirTree.objects.filter(path=p)
         if par.exists():
             self.parent = par[0]
             if par[0].pk == self.pk:
@@ -89,17 +87,17 @@ class CosmosDir(models.Model):
         if 'http://cosmos08' in self.path:
             return 'cosmos08'
         else:
-            return 'cosmos10'
+            return 'cosmos11'
 
     def other_dc(self):
         if self.dc() == 'cosmos08':
-            return 'cosmos10'
+            return 'cosmos11'
         else:
             return 'cosmos08'
 
     def other_cluster(self):
         search = self.path.replace(self.dc(), self.other_dc())
-        dirs = CosmosDir.objects.filter(path = search)
+        dirs = CosmosDirTree.objects.filter(path = search)
         if dirs:
             return dirs[0]
         else:
